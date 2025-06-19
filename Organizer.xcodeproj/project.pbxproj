@@ -6,30 +6,27 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D0F4DAF72E043EC60019884C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F4DAEB2E043EC60019884C /* AppDelegate.swift */; };
+		D0F4DAF82E043EC60019884C /* Organizer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D0F4DAF22E043EC60019884C /* Organizer.xcdatamodeld */; };
+		D0F4DAF92E043EC60019884C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F4DAF32E043EC60019884C /* SceneDelegate.swift */; };
+		D0F4DAFB2E043EC60019884C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0F4DAEC2E043EC60019884C /* Assets.xcassets */; };
+		D0F4DAFD2E043EC60019884C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0F4DAEF2E043EC60019884C /* LaunchScreen.storyboard */; };
+		D0F4DAFE2E043EC60019884C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0F4DAF12E043EC60019884C /* Main.storyboard */; };
+		D0F4DB042E043FAA0019884C /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F4DB032E043FAA0019884C /* Task.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		D0F4DAD02E043EBE0019884C /* Organizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Organizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0F4DAEB2E043EC60019884C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		D0F4DAEC2E043EC60019884C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D0F4DAED2E043EC60019884C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D0F4DAEE2E043EC60019884C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D0F4DAF02E043EC60019884C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D0F4DAF32E043EC60019884C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		D0F4DAF62E043EC60019884C /* Organizer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Organizer.xcdatamodel; sourceTree = "<group>"; };
+		D0F4DB032E043FAA0019884C /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D0F4DAE52E043EC00019884C /* Exceptions for "Organizer" folder in "Organizer" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = D0F4DACF2E043EBE0019884C /* Organizer */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		D0F4DAD22E043EBE0019884C /* Organizer */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				D0F4DAE52E043EC00019884C /* Exceptions for "Organizer" folder in "Organizer" target */,
-			);
-			path = Organizer;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		D0F4DACD2E043EBE0019884C /* Frameworks */ = {
@@ -45,7 +42,7 @@
 		D0F4DAC72E043EBE0019884C = {
 			isa = PBXGroup;
 			children = (
-				D0F4DAD22E043EBE0019884C /* Organizer */,
+				D0F4DAF52E043EC60019884C /* Organizer */,
 				D0F4DAD12E043EBE0019884C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -56,6 +53,53 @@
 				D0F4DAD02E043EBE0019884C /* Organizer.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D0F4DAF52E043EC60019884C /* Organizer */ = {
+			isa = PBXGroup;
+			children = (
+				D0F4DAFF2E043EE10019884C /* Models */,
+				D0F4DB002E043EF10019884C /* Controllers */,
+				D0F4DB022E043F0C0019884C /* Delegate */,
+				D0F4DB012E043EFB0019884C /* SupportFile */,
+			);
+			path = Organizer;
+			sourceTree = "<group>";
+		};
+		D0F4DAFF2E043EE10019884C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D0F4DB032E043FAA0019884C /* Task.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		D0F4DB002E043EF10019884C /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D0F4DAF12E043EC60019884C /* Main.storyboard */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		D0F4DB012E043EFB0019884C /* SupportFile */ = {
+			isa = PBXGroup;
+			children = (
+				D0F4DAEF2E043EC60019884C /* LaunchScreen.storyboard */,
+				D0F4DAF22E043EC60019884C /* Organizer.xcdatamodeld */,
+				D0F4DAED2E043EC60019884C /* Info.plist */,
+				D0F4DAEC2E043EC60019884C /* Assets.xcassets */,
+			);
+			path = SupportFile;
+			sourceTree = "<group>";
+		};
+		D0F4DB022E043F0C0019884C /* Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				D0F4DAF32E043EC60019884C /* SceneDelegate.swift */,
+				D0F4DAEB2E043EC60019884C /* AppDelegate.swift */,
+			);
+			path = Delegate;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -72,9 +116,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				D0F4DAD22E043EBE0019884C /* Organizer */,
 			);
 			name = Organizer;
 			packageProductDependencies = (
@@ -122,6 +163,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0F4DAFB2E043EC60019884C /* Assets.xcassets in Resources */,
+				D0F4DAFD2E043EC60019884C /* LaunchScreen.storyboard in Resources */,
+				D0F4DAFE2E043EC60019884C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,10 +176,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0F4DB042E043FAA0019884C /* Task.swift in Sources */,
+				D0F4DAF72E043EC60019884C /* AppDelegate.swift in Sources */,
+				D0F4DAF82E043EC60019884C /* Organizer.xcdatamodeld in Sources */,
+				D0F4DAF92E043EC60019884C /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		D0F4DAEF2E043EC60019884C /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D0F4DAEE2E043EC60019884C /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		D0F4DAF12E043EC60019884C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D0F4DAF02E043EC60019884C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		D0F4DAE72E043EC00019884C /* Debug */ = {
@@ -147,7 +214,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SMFNSK27YT;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Organizer/Info.plist;
+				INFOPLIST_FILE = "/Users/macbookair/Desktop/Готовые мои проекты/Organizer/Organizer/SupportFile/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -175,7 +242,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SMFNSK27YT;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Organizer/Info.plist;
+				INFOPLIST_FILE = "/Users/macbookair/Desktop/Готовые мои проекты/Organizer/Organizer/SupportFile/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -337,6 +404,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		D0F4DAF22E043EC60019884C /* Organizer.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D0F4DAF62E043EC60019884C /* Organizer.xcdatamodel */,
+			);
+			currentVersion = D0F4DAF62E043EC60019884C /* Organizer.xcdatamodel */;
+			path = Organizer.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = D0F4DAC82E043EBE0019884C /* Project object */;
 }

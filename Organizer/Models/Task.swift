@@ -14,6 +14,7 @@ struct Task {
     var isCompleted: Bool = false
     var priority: Priority = .medium
     var description: String?
+    var date: Date? 
     
     enum Priority: String, CaseIterable {
         case low = "Низкий"

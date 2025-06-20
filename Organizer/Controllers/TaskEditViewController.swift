@@ -10,6 +10,7 @@ class TaskEditViewController: UIViewController {
     private let saveButton = UIButton(type: .system)
     private let descriptionTextView = UITextView()
     private let placeholderLabel = UILabel()
+    private let datePicker = UIDatePicker()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +24,7 @@ class TaskEditViewController: UIViewController {
     private func setupUI() {
         title = task == nil ? "Новая задача" : "Редактировать"
         view.backgroundColor = .black
+        
         
         // Настройка текстового поля
         titleTextField.attributedPlaceholder = NSAttributedString(
@@ -40,6 +42,8 @@ class TaskEditViewController: UIViewController {
         titleTextField.layer.masksToBounds = true
         titleTextField.backgroundColor = .black
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
+        titleTextField.returnKeyType = .done
+        titleTextField.delegate = self
         view.addSubview(titleTextField)
         
         // Настройка сегментированного контрола
@@ -68,6 +72,7 @@ class TaskEditViewController: UIViewController {
         descriptionTextView.layer.masksToBounds = true
         descriptionTextView.delegate = self
         descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        descriptionTextView.returnKeyType = .done
         view.addSubview(descriptionTextView)
         
         // Настройка кнопки сохранения
@@ -88,15 +93,17 @@ class TaskEditViewController: UIViewController {
             titleTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
             titleTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             titleTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            titleTextField.heightAnchor.constraint(equalToConstant: 50),
             
             prioritySegmentedControl.topAnchor.constraint(equalTo: titleTextField.bottomAnchor, constant: 20),
             prioritySegmentedControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             prioritySegmentedControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            prioritySegmentedControl.heightAnchor.constraint(equalToConstant: 35),
             
             descriptionTextView.topAnchor.constraint(equalTo: prioritySegmentedControl.bottomAnchor, constant: 20),
             descriptionTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             descriptionTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            descriptionTextView.heightAnchor.constraint(equalToConstant: 150),
+            descriptionTextView.heightAnchor.constraint(equalToConstant: 250),
             
             saveButton.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 32),
             saveButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -159,8 +166,21 @@ class TaskEditViewController: UIViewController {
         }
 }
 
-extension TaskEditViewController: UITextViewDelegate {
+extension TaskEditViewController: UITextViewDelegate, UITextFieldDelegate {
     func textViewDidChange(_ textView: UITextView) {
         updatePlaceholderVisibility()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
     }
 }

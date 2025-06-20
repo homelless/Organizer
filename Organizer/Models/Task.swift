@@ -11,8 +11,9 @@ import Foundation
 struct Task {
     var id: UUID = UUID()
     var title: String
-    var isComleted: Bool = false
+    var isCompleted: Bool = false
     var priority: Priority = .medium
+    var description: String?
     
     enum Priority: String, CaseIterable {
         case low = "Низкий"

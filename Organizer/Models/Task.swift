@@ -8,7 +8,7 @@ import UIKit
 import Foundation
 
 
-struct Task {
+struct Task: Codable {
     var id: UUID = UUID()
     var title: String
     var isCompleted: Bool = false
@@ -16,7 +16,7 @@ struct Task {
     var description: String?
     var date: Date? 
     
-    enum Priority: String, CaseIterable {
+    enum Priority: String,Codable,CaseIterable {
         case low = "Низкий"
         case medium = "Средний"
         case high = "Высокий"

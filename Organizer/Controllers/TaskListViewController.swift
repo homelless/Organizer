@@ -4,24 +4,41 @@ import UIKit
 class TaskListViewController: UIViewController {
     
     // MARK: - Properties
-    private var tasks: [Task] = []
+    private var tasks: [Task] = [] {
+        didSet {
+            saveTasks()
+        }
+    }
     private let tableView = UITableView()
     private let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
+    private var titleLabel = UILabel()
+    private var manager = TaskManager.shared
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
         setupConstraints()
+        loadTasks()
     }
     
     // MARK: - UI Setup
     private func setupUI() {
-        title = "Мои задачи"
+        
+        // Оформление заголовка
+        navigationItem.title = "Мои задачи"
+        navigationController?.navigationBar.titleTextAttributes = [
+            .foregroundColor: UIColor.white,
+            .font: UIFont.boldSystemFont(ofSize: 20)
+        ]
+        navigationController?.navigationBar.barTintColor = .black
+        
+        
+        
         view.backgroundColor = .black
         tableView.backgroundColor = .black
         addButton.tintColor = .white
+        
         
         // Настройка таблицы
         tableView.register(TaskCell.self, forCellReuseIdentifier: TaskCell.reuseId)
@@ -29,6 +46,7 @@ class TaskListViewController: UIViewController {
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
+        
         
         // Настройка кнопки добавления
         navigationItem.rightBarButtonItem = addButton
@@ -45,19 +63,52 @@ class TaskListViewController: UIViewController {
         ])
     }
     
-    // MARK: - Actions
-    @objc private func addButtonTapped() {
-        let editVC = TaskEditViewController()
-        editVC.completion = { [weak self] newTask in
-            self?.tasks.append(newTask)
-            self?.tableView.reloadData()
-        }
-        navigationController?.pushViewController(editVC, animated: true)
+    // MARK: - Data Management
+    private func loadTasks() {
+        tasks = manager.loadTasks()
+        tableView.reloadData()
+    }
+    
+    private func saveTasks() {
+        manager.saveTasks(tasks)
+    }
+    
+    private func addTask(_ task: Task) {
+        let newIndexPath = IndexPath(row: tasks.count, section: 0)
+        tasks.append(task)
+        tableView.insertRows(at: [newIndexPath], with: .automatic)
+    }
+    
+    private func updateTask(_ task: Task, at indexPath: IndexPath) {
+        tasks[indexPath.row] = task
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
+    
+    private func deleteTask(at indexPath: IndexPath) {
+        tasks.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .fade)
     }
     
     private func toggleTaskCompletion(at indexPath: IndexPath) {
         tasks[indexPath.row].isCompleted.toggle()
         tableView.reloadRows(at: [indexPath], with: .automatic)
+        
+        if tasks[indexPath.row].isCompleted {
+            //задежка перед удалением кнопки после анимации
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+                self?.deleteTask(at: indexPath)
+            }
+        }
+    }
+    
+    
+    // MARK: - Actions
+    @objc private func addButtonTapped() {
+        let editVC = TaskEditViewController()
+        editVC.completion = { [weak self] newTask in
+            self?.addTask(newTask)
+        }
+        navigationController?.pushViewController(editVC, animated: true)
     }
 }
 
@@ -87,8 +138,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
         editVC.task = task
         
         editVC.completion = { [weak self] updatedTask in
-            self?.tasks[indexPath.row] = updatedTask
-            self?.tableView.reloadData()
+            self?.updateTask(updatedTask, at: indexPath)
         }
         
         navigationController?.pushViewController(editVC, animated: true)
@@ -96,5 +146,15 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            self.deleteTask(at: indexPath)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
     }
 }

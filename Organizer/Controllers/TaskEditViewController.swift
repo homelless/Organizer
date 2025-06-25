@@ -4,6 +4,7 @@ class TaskEditViewController: UIViewController {
     
     var task: Task?
     var completion: ((Task) -> Void)?
+    private let manager = TaskManager.shared
     
     private let titleTextField = UITextField()
     private let prioritySegmentedControl = UISegmentedControl(items: Task.Priority.allCases.map { $0.rawValue })
@@ -149,9 +150,27 @@ class TaskEditViewController: UIViewController {
         
         let priority = Task.Priority.allCases[prioritySegmentedControl.selectedSegmentIndex]
         let description = descriptionTextView.text
-        let task = Task(title: title, priority: priority, description: description)
         
-        completion?(task)
+        if var task = task {
+            // редактирование существующей задачи
+            task.title = title
+            task.description = description
+            task.priority = priority
+            
+            manager.updateTask(task)
+        } else {
+            // создание новой задачи
+            let newTask = Task(
+                title: title,
+                isCompleted: false,
+                priority: priority,
+                description: description,
+            )
+            manager.addTask(newTask)
+        }
+       
+        
+        completion?(task ?? Task(title: title, priority: priority, description: description))
         navigationController?.popViewController(animated: true)
     }
     

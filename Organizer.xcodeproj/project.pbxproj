@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D0785AFA2E0C23CC006B50A4 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0785AF92E0C23CC006B50A4 /* TaskManager.swift */; };
 		D0F4DAF72E043EC60019884C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F4DAEB2E043EC60019884C /* AppDelegate.swift */; };
 		D0F4DAF82E043EC60019884C /* Organizer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D0F4DAF22E043EC60019884C /* Organizer.xcdatamodeld */; };
 		D0F4DAF92E043EC60019884C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F4DAF32E043EC60019884C /* SceneDelegate.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D0785AF92E0C23CC006B50A4 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
 		D0F4DAD02E043EBE0019884C /* Organizer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Organizer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0F4DAEB2E043EC60019884C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D0F4DAEC2E043EC60019884C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -77,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				D0F4DB032E043FAA0019884C /* Task.swift */,
+				D0785AF92E0C23CC006B50A4 /* TaskManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -195,6 +198,7 @@
 			files = (
 				D0F4DB042E043FAA0019884C /* Task.swift in Sources */,
 				D0F4DB242E044F960019884C /* TaskEditViewController.swift in Sources */,
+				D0785AFA2E0C23CC006B50A4 /* TaskManager.swift in Sources */,
 				D0F4DAF72E043EC60019884C /* AppDelegate.swift in Sources */,
 				D0F4DAF82E043EC60019884C /* Organizer.xcdatamodeld in Sources */,
 				D0F4DAF92E043EC60019884C /* SceneDelegate.swift in Sources */,

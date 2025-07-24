@@ -1,3 +1,5 @@
+
+
 import UIKit
 
 class TaskEditViewController: UIViewController {
@@ -11,7 +13,6 @@ class TaskEditViewController: UIViewController {
     private let saveButton = UIButton(type: .system)
     private let descriptionTextView = UITextView()
     private let placeholderLabel = UILabel()
-    private let datePicker = UIDatePicker()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -117,60 +118,69 @@ class TaskEditViewController: UIViewController {
            descriptionTextView.delegate = self
        }
     
+    
     private func setupPlaceholder() {
         placeholderLabel.text = "Описание задачи.."
-        placeholderLabel.textColor = .lightGray
-        placeholderLabel.font = descriptionTextView.font
+        placeholderLabel.textColor = .lightGray.withAlphaComponent(0.8)
+        placeholderLabel.font = UIFont.systemFont(ofSize: 16)
         placeholderLabel.numberOfLines = 0
         placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionTextView.addSubview(placeholderLabel)
+        view.addSubview(placeholderLabel)
         
         NSLayoutConstraint.activate([
             placeholderLabel.topAnchor.constraint(equalTo: descriptionTextView.topAnchor, constant: 8),
-            placeholderLabel.leadingAnchor.constraint(equalTo: descriptionTextView.leadingAnchor, constant: 6),
-            placeholderLabel.trailingAnchor.constraint(equalTo: descriptionTextView.trailingAnchor, constant: -6)
+            placeholderLabel.leadingAnchor.constraint(equalTo: descriptionTextView.leadingAnchor, constant: 8),
+            placeholderLabel.trailingAnchor.constraint(equalTo: descriptionTextView.trailingAnchor, constant: -8)
         ])
         
         updatePlaceholderVisibility()
     }
-    
+
     private func setupData() {
         guard let task = task else { return }
         titleTextField.text = task.title
         prioritySegmentedControl.selectedSegmentIndex = Task.Priority.allCases.firstIndex(of: task.priority) ?? 1
-        descriptionTextView.text = task.description
+        descriptionTextView.text = task.description ?? ""
         placeholderLabel.isHidden = !descriptionTextView.text.isEmpty
     }
     
     @objc private func saveTapped() {
-        guard let title = titleTextField.text, !title.isEmpty else {
+        guard let title = titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !title.isEmpty else {
             showAlert(title: "Ошибка", message: "Введите название задачи")
             return
         }
+    
         
         let priority = Task.Priority.allCases[prioritySegmentedControl.selectedSegmentIndex]
-        let description = descriptionTextView.text
+           let descriptionText = descriptionTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+           let description = descriptionText.isEmpty ? nil : descriptionText
+           
         
-        if var task = task {
+        if let task = task {
             // редактирование существующей задачи
-            task.title = title
-            task.description = description
-            task.priority = priority
+           let updateTask = Task(
+            id: task.id,
+            title: title,
+            isCompleted: task.isCompleted,
+            priority: priority,
+            description: description
+           )
             
-            manager.updateTask(task)
+            manager.updateTask(updateTask)
+            completion?(updateTask)
         } else {
             // создание новой задачи
             let newTask = Task(
                 title: title,
                 isCompleted: false,
                 priority: priority,
-                description: description,
+                description: description?.isEmpty ?? true ? nil : description,
             )
             manager.addTask(newTask)
+            completion?(newTask)
         }
        
-        
-        completion?(task ?? Task(title: title, priority: priority, description: description))
         navigationController?.popViewController(animated: true)
     }
     
@@ -183,9 +193,13 @@ class TaskEditViewController: UIViewController {
     private func updatePlaceholderVisibility() {
             placeholderLabel.isHidden = !descriptionTextView.text.isEmpty
         }
+    
+    
+
 }
 
 extension TaskEditViewController: UITextViewDelegate, UITextFieldDelegate {
+    
     func textViewDidChange(_ textView: UITextView) {
         updatePlaceholderVisibility()
     }

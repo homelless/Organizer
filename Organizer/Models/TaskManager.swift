@@ -1,18 +1,10 @@
-//
-//  TaskManager.swift
-//  Organizer
-//
-//  Created by MacBookAir on 25.06.25.
-//
-
 import Foundation
 
 class TaskManager {
     
     static let shared = TaskManager()
     private let taskKey = "savedTask"
-    
-    public init () {}
+    private init () {}
     
     // сохранение заметки
     func saveTasks(_ task: [Task]) {
@@ -22,7 +14,6 @@ class TaskManager {
     }
     
     // загрузка заметки
-    
     func loadTasks() -> [Task] {
         if let data = UserDefaults.standard.data(forKey: taskKey),
            let decodedTasks = try? JSONDecoder().decode([Task].self, from: data) {
@@ -37,7 +28,7 @@ class TaskManager {
         tasks.append(newTask)
         saveTasks(tasks)
     }
-    
+
     func updateTask(_ updateTask: Task) {
         var tasks = loadTasks()
         if let index = tasks.firstIndex(where: { $0.id == updateTask.id }) {

@@ -84,7 +84,7 @@ class TaskCell: UITableViewCell {
         titleLabel.text = task.title
         priorityView.backgroundColor = task.priority.color
         
-        if task.description != "" {
+        if task.description != nil {
             descriptionView.isHidden = false
             descriptionView.image = UIImage(systemName: "line.horizontal.3")
             descriptionView.backgroundColor = .black

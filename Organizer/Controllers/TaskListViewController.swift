@@ -1,14 +1,11 @@
 
+
 import UIKit
 
 class TaskListViewController: UIViewController {
     
     // MARK: - Properties
-    private var tasks: [Task] = [] {
-        didSet {
-            saveTasks()
-        }
-    }
+    private var tasks: [Task] = []
     private let tableView = UITableView()
     private let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
     private var titleLabel = UILabel()
@@ -32,13 +29,11 @@ class TaskListViewController: UIViewController {
             .font: UIFont.boldSystemFont(ofSize: 20)
         ]
         navigationController?.navigationBar.barTintColor = .black
-        
-        
-        
+        navigationController?.navigationBar.isTranslucent = false
+
         view.backgroundColor = .black
         tableView.backgroundColor = .black
         addButton.tintColor = .white
-        
         
         // Настройка таблицы
         tableView.register(TaskCell.self, forCellReuseIdentifier: TaskCell.reuseId)
@@ -82,6 +77,7 @@ class TaskListViewController: UIViewController {
     private func updateTask(_ task: Task, at indexPath: IndexPath) {
         tasks[indexPath.row] = task
         tableView.reloadRows(at: [indexPath], with: .automatic)
+        manager.saveTasks(tasks)
     }
     
     private func deleteTask(at indexPath: IndexPath) {
@@ -91,14 +87,21 @@ class TaskListViewController: UIViewController {
     
     private func toggleTaskCompletion(at indexPath: IndexPath) {
         tasks[indexPath.row].isCompleted.toggle()
-        tableView.reloadRows(at: [indexPath], with: .automatic)
         
         if tasks[indexPath.row].isCompleted {
-            //задежка перед удалением кнопки после анимации
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            //Анимация заверешения
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                guard let self = self else { return }
+                if let cell = self.tableView.cellForRow(at: indexPath) as? TaskCell {
+                    cell.configure(with: self.tasks[indexPath.row])
+                }
+            } completion: { [weak self] _ in
                 self?.deleteTask(at: indexPath)
             }
+        } else{
+            tableView.reloadRows(at: [indexPath], with: .automatic)
         }
+        manager.deleteTask(withId: tasks[indexPath.row].id)
     }
     
     
@@ -123,10 +126,14 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
         let task = tasks[indexPath.row]
         cell.configure(with: task)
         
-        cell.completionHandler = { [weak self] in
-            self?.toggleTaskCompletion(at: indexPath)
+        cell.completionHandler = { [weak self, weak cell] in
+            guard
+                let self = self,
+                let cell = cell,
+                let indexPath = self.tableView.indexPath(for: cell)
+            else { return }
+            self.toggleTaskCompletion(at: indexPath)
         }
-        
         return cell
     }
     

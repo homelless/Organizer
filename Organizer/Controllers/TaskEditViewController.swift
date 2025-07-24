@@ -4,16 +4,18 @@ import UIKit
 
 class TaskEditViewController: UIViewController {
     
-    var task: Task?
-    var completion: ((Task) -> Void)?
+    // MARK: - Properties
+    public var task: Task?
+    public var completion: ((Task) -> Void)?
     private let manager = TaskManager.shared
-    
     private let titleTextField = UITextField()
     private let prioritySegmentedControl = UISegmentedControl(items: Task.Priority.allCases.map { $0.rawValue })
     private let saveButton = UIButton(type: .system)
     private let descriptionTextView = UITextView()
     private let placeholderLabel = UILabel()
     
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -23,16 +25,17 @@ class TaskEditViewController: UIViewController {
         setupTextViewDelegate()
     }
     
+    // MARK: - UI Setup
     private func setupUI() {
+        // Настройка заголовка и фона
         title = task == nil ? "Новая задача" : "Редактировать"
         view.backgroundColor = .black
-        
         
         // Настройка текстового поля
         titleTextField.attributedPlaceholder = NSAttributedString(
             string: "Новая задача..",
             attributes: [
-                .foregroundColor: UIColor.lightGray.withAlphaComponent(0.8), // Прозрачность = яркость
+                .foregroundColor: UIColor.lightGray.withAlphaComponent(0.8),
                 .font: UIFont.systemFont(ofSize: 16)
             ]
         )
@@ -63,7 +66,7 @@ class TaskEditViewController: UIViewController {
         prioritySegmentedControl.layer.masksToBounds = true
         view.addSubview(prioritySegmentedControl)
         
-        
+        // Настройка поля описания
         descriptionTextView.isScrollEnabled = true
         descriptionTextView.textColor = .white
         descriptionTextView.backgroundColor = .black
@@ -114,11 +117,6 @@ class TaskEditViewController: UIViewController {
         ])
     }
     
-    private func setupTextViewDelegate() {
-           descriptionTextView.delegate = self
-       }
-    
-    
     private func setupPlaceholder() {
         placeholderLabel.text = "Описание задачи.."
         placeholderLabel.textColor = .lightGray.withAlphaComponent(0.8)
@@ -135,38 +133,37 @@ class TaskEditViewController: UIViewController {
         
         updatePlaceholderVisibility()
     }
-
+    
+    // MARK: Data
     private func setupData() {
         guard let task = task else { return }
         titleTextField.text = task.title
         prioritySegmentedControl.selectedSegmentIndex = Task.Priority.allCases.firstIndex(of: task.priority) ?? 1
         descriptionTextView.text = task.description ?? ""
-        placeholderLabel.isHidden = !descriptionTextView.text.isEmpty
+        updatePlaceholderVisibility()
     }
     
+    // MARK: - Actions
     @objc private func saveTapped() {
         guard let title = titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
               !title.isEmpty else {
             showAlert(title: "Ошибка", message: "Введите название задачи")
             return
         }
-    
         
         let priority = Task.Priority.allCases[prioritySegmentedControl.selectedSegmentIndex]
-           let descriptionText = descriptionTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-           let description = descriptionText.isEmpty ? nil : descriptionText
-           
+        let descriptionText = descriptionTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        let description = descriptionText.isEmpty ? nil : descriptionText
         
         if let task = task {
             // редактирование существующей задачи
-           let updateTask = Task(
-            id: task.id,
-            title: title,
-            isCompleted: task.isCompleted,
-            priority: priority,
-            description: description
-           )
-            
+            let updateTask = Task(
+                id: task.id,
+                title: title,
+                isCompleted: task.isCompleted,
+                priority: priority,
+                description: description
+            )
             manager.updateTask(updateTask)
             completion?(updateTask)
         } else {
@@ -180,7 +177,6 @@ class TaskEditViewController: UIViewController {
             manager.addTask(newTask)
             completion?(newTask)
         }
-       
         navigationController?.popViewController(animated: true)
     }
     
@@ -190,20 +186,24 @@ class TaskEditViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    private func setupTextViewDelegate() {
+        descriptionTextView.delegate = self
+    }
+    
     private func updatePlaceholderVisibility() {
-            placeholderLabel.isHidden = !descriptionTextView.text.isEmpty
-        }
-    
-    
-
+        placeholderLabel.isHidden = !descriptionTextView.text.isEmpty
+    }
 }
 
+// MARK: - Delegates
 extension TaskEditViewController: UITextViewDelegate, UITextFieldDelegate {
     
+    // Метод для видимости placeholdera
     func textViewDidChange(_ textView: UITextView) {
         updatePlaceholderVisibility()
     }
     
+    // Скрытие клавиатуры при нажатии на Return оба метода 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true

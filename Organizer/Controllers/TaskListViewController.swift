@@ -1,5 +1,3 @@
-
-
 import UIKit
 
 class TaskListViewController: UIViewController {
@@ -43,7 +41,6 @@ class TaskListViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
         
-        
         // Настройка кнопки добавления
         navigationItem.rightBarButtonItem = addButton
         addButton.target = self
@@ -77,8 +74,6 @@ class TaskListViewController: UIViewController {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            
         ])
     }
     
@@ -138,7 +133,7 @@ class TaskListViewController: UIViewController {
         tableView.reloadData()
     }
     
-    
+    // Метод для добавления новой заметки
     @objc private func addButtonTapped() {
         let editVC = TaskEditViewController()
         editVC.completion = { [weak self] newTask in
@@ -147,6 +142,7 @@ class TaskListViewController: UIViewController {
         navigationController?.pushViewController(editVC, animated: true)
     }
     
+    // Метод для перехода к списку задач с одинаковым приоритетом
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
         let priority: Task.Priority? = {
             switch sender.selectedSegmentIndex {
@@ -163,15 +159,18 @@ class TaskListViewController: UIViewController {
 
 // MARK: - UITableView DataSource & Delegate
 extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tasks.count
     }
     
+    // Отображение ячейки в таблице
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TaskCell.reuseId, for: indexPath) as! TaskCell
         let task = tasks[indexPath.row]
         cell.configure(with: task)
         
+        // Обработчик завершения задачи
         cell.completionHandler = { [weak self, weak cell] in
             guard
                 let self = self,
@@ -183,6 +182,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     
+    // Метод для редактирования ячейки при нажатии на нее
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -190,6 +190,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
         let editVC = TaskEditViewController()
         editVC.task = task
         
+        // замыкание, которое сработает после редактирования и обновит задачу
         editVC.completion = { [weak self] updatedTask in
             self?.updateTask(updatedTask, at: indexPath)
         }
@@ -200,13 +201,14 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
-    
+    // Удаление заметки по свайпу влево
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             self.deleteTask(at: indexPath)
         }
     }
     
+    // Метод для редактирования строк таблицы 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }

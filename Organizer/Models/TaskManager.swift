@@ -1,10 +1,12 @@
 import Foundation
 
 class TaskManager {
-    
+    // MARK: - Properties
     static let shared = TaskManager()
     private let taskKey = "savedTask"
     private init () {}
+    
+    // MARK: - Actions
     
     // сохранение заметки
     func saveTasks(_ task: [Task]) {
@@ -22,13 +24,13 @@ class TaskManager {
         return []
     }
     
-    // добавляем новую заметку
+    // добавление новой заметки
     func addTask(_ newTask: Task) {
         var tasks = loadTasks()
         tasks.append(newTask)
         saveTasks(tasks)
     }
-
+    // редактирование существующей заметки
     func updateTask(_ updateTask: Task) {
         var tasks = loadTasks()
         if let index = tasks.firstIndex(where: { $0.id == updateTask.id }) {
@@ -37,14 +39,14 @@ class TaskManager {
         }
     }
     
-    // удаляем заметку
+    // удаление заметки
     func deleteTask(withId id: UUID) {
         var tasks = loadTasks()
         tasks.removeAll { $0.id == id }
         saveTasks(tasks)
     }
     
-    // Отметить задачу как выполненную/невыполненную
+    // отметить задачу как выполненную/невыполненную
     func toggleTaskCompletion(withId id: UUID) {
         var tasks = loadTasks()
         if let index = tasks.firstIndex(where: { $0.id == id }) {

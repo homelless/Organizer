@@ -2,6 +2,7 @@ import UIKit
 
 class TaskCell: UITableViewCell {
     
+    // MARK: - Properties
     // Идентификатор для переиспользования ячейки
     static let reuseId = "TaskCell"
     
@@ -24,12 +25,12 @@ class TaskCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - UI Setup
     private func setupUI() {
         backgroundColor = .black
     
         // Настройка картинки описания
         descriptionView.isHidden = true
-        
         
         // Настройка кнопки выполнения
         completionButton.layer.borderWidth = 1
@@ -80,6 +81,7 @@ class TaskCell: UITableViewCell {
         ])
     }
     
+    // Настройка отображения ячейки под данные заметки
     func configure(with task: Task) {
         titleLabel.text = task.title
         priorityView.backgroundColor = task.priority.color
@@ -103,6 +105,7 @@ class TaskCell: UITableViewCell {
         }
     }
     
+    // Метод для передачи нажатия на кнопку 
     @objc private func completionTapped() {
         completionHandler?()
     }

@@ -9,6 +9,7 @@ class TaskListViewController: UIViewController {
     private let tableView = UITableView()
     private let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action: nil)
     private var titleLabel = UILabel()
+    private var prioritySegmentedControl = UISegmentedControl()
     private var manager = TaskManager.shared
     
     // MARK: - Lifecycle
@@ -30,7 +31,7 @@ class TaskListViewController: UIViewController {
         ]
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.isTranslucent = false
-
+        
         view.backgroundColor = .black
         tableView.backgroundColor = .black
         addButton.tintColor = .white
@@ -47,14 +48,37 @@ class TaskListViewController: UIViewController {
         navigationItem.rightBarButtonItem = addButton
         addButton.target = self
         addButton.action = #selector(addButtonTapped)
+        
+        // Настройка сегментов приоритета
+        prioritySegmentedControl.insertSegment(withTitle: "Все", at: 0, animated: false)
+        prioritySegmentedControl.insertSegment(withTitle: "Когда-то", at: 1, animated: false)
+        prioritySegmentedControl.insertSegment(withTitle: "Надо бы", at: 2, animated: false)
+        prioritySegmentedControl.insertSegment(withTitle: "Срочно", at: 3, animated: false)
+        prioritySegmentedControl.selectedSegmentIndex = 0
+        prioritySegmentedControl.backgroundColor = .darkGray
+        prioritySegmentedControl.tintColor = .white
+        prioritySegmentedControl.apportionsSegmentWidthsByContent = true
+        prioritySegmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        prioritySegmentedControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
+        view.addSubview(prioritySegmentedControl)
+        
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            
+            prioritySegmentedControl.topAnchor.constraint(equalTo:  view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            prioritySegmentedControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            prioritySegmentedControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            prioritySegmentedControl.heightAnchor.constraint(equalToConstant: 32),
+            
+            
+            tableView.topAnchor.constraint(equalTo: prioritySegmentedControl.bottomAnchor, constant: 8),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            
         ])
     }
     
@@ -103,15 +127,37 @@ class TaskListViewController: UIViewController {
         }
         manager.deleteTask(withId: tasks[indexPath.row].id)
     }
-    
-    
+
+
     // MARK: - Actions
+    
+    private func filterTasks(by priority: Task.Priority? = nil) {
+        let allTasks = manager.loadTasks()
+        tasks = priority == nil ? allTasks : allTasks.filter { $0.priority == priority!
+        }
+        tableView.reloadData()
+    }
+    
+    
     @objc private func addButtonTapped() {
         let editVC = TaskEditViewController()
         editVC.completion = { [weak self] newTask in
             self?.addTask(newTask)
         }
         navigationController?.pushViewController(editVC, animated: true)
+    }
+    
+    @objc private func segmentChanged(_ sender: UISegmentedControl) {
+        let priority: Task.Priority? = {
+            switch sender.selectedSegmentIndex {
+            case 0: return nil
+            case 1: return .low
+            case 2: return .medium
+            case 3: return .high
+            default: return nil
+            }
+        }()
+        filterTasks(by: priority)
     }
 }
 

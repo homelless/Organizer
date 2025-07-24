@@ -8,10 +8,12 @@ struct Task: Codable {
     var priority: Priority = .medium
     var description: String? = nil
     
-    enum Priority: String,Codable,CaseIterable {
-        case low = "Низкий"
-        case medium = "Средний"
-        case high = "Высокий"
+    
+    enum Priority: String, Codable, CaseIterable, Equatable {
+        case low = "Когда-то"
+        case medium = "Надо бы"
+        case high = "Срочно"
+       
         
         var color: UIColor {
             switch self {

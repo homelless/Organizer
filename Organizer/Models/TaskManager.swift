@@ -7,14 +7,12 @@ class TaskManager {
     private init () {}
     
     // MARK: - Actions
-    
     // сохранение заметки
     func saveTasks(_ task: [Task]) {
         if let data = try? JSONEncoder().encode(task) {
             UserDefaults.standard.set(data, forKey: taskKey)
         }
     }
-    
     // загрузка заметки
     func loadTasks() -> [Task] {
         if let data = UserDefaults.standard.data(forKey: taskKey),
@@ -23,7 +21,6 @@ class TaskManager {
         }
         return []
     }
-    
     // добавление новой заметки
     func addTask(_ newTask: Task) {
         var tasks = loadTasks()
@@ -38,14 +35,12 @@ class TaskManager {
             saveTasks(tasks)
         }
     }
-    
     // удаление заметки
     func deleteTask(withId id: UUID) {
         var tasks = loadTasks()
         tasks.removeAll { $0.id == id }
         saveTasks(tasks)
     }
-    
     // отметить задачу как выполненную/невыполненную
     func toggleTaskCompletion(withId id: UUID) {
         var tasks = loadTasks()

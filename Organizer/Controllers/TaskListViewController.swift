@@ -169,6 +169,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: TaskCell.reuseId, for: indexPath) as! TaskCell
         let task = tasks[indexPath.row]
         cell.configure(with: task)
+        cell.selectionStyle = .none
         
         // Обработчик завершения задачи
         cell.completionHandler = { [weak self, weak cell] in

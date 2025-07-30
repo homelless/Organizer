@@ -8,6 +8,7 @@ struct Task: Codable {
     var isCompleted: Bool = false
     var priority: Priority = .medium
     var description: String? = nil
+    var date: Date? = nil
     
     enum Priority: String, Codable, CaseIterable, Equatable {
         case low = "Когда-то"

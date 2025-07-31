@@ -102,6 +102,8 @@ class TaskListViewController: UIViewController {
     private func deleteTask(at indexPath: IndexPath) {
         tasks.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
+        saveTasks()
+        tableView.reloadData()
     }
     
     private func toggleTaskCompletion(at indexPath: IndexPath) {
@@ -206,6 +208,7 @@ extension TaskListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             self.deleteTask(at: indexPath)
+            
         }
     }
     

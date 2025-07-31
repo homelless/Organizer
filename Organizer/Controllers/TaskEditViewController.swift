@@ -10,7 +10,6 @@ class TaskEditViewController: UIViewController {
     private let manager = TaskManager.shared
     private let titleTextField = UITextField()
     private let prioritySegmentedControl = UISegmentedControl(items: Task.Priority.allCases.map { $0.rawValue })
-    private let saveButton = UIButton(type: .system)
     private let descriptionTextView = UITextView()
     private let placeholderLabel = UILabel()
     private let datePicker = UIDatePicker()
@@ -20,6 +19,7 @@ class TaskEditViewController: UIViewController {
     private let dateLabel = UILabel()
     private let switchView = UISwitch()
     private let labelForDate = UILabel()
+    private let addButton = UIBarButtonItem(title: "Сохранить", style: .done, target: nil, action: nil)
     
     private var containerHeightConstraint: NSLayoutConstraint!
     
@@ -52,6 +52,11 @@ class TaskEditViewController: UIViewController {
                 .font: UIFont.systemFont(ofSize: 16)
             ]
         )
+        
+        navigationItem.rightBarButtonItem = addButton
+        addButton.target = self
+        addButton.action = #selector(saveTapped)
+        
         titleTextField.borderStyle = .roundedRect
         titleTextField.layer.cornerRadius = 8
         titleTextField.textColor = .white
@@ -111,7 +116,6 @@ class TaskEditViewController: UIViewController {
         datePicker.backgroundColor = .black
         datePicker.layer.cornerRadius = 4
         datePicker.tintColor = .white
-        datePicker.setValue(UIColor.white, forKey: "textColor")
         if #available(iOS 13.0, *) {
             datePicker.overrideUserInterfaceStyle = .dark
         }
@@ -130,28 +134,14 @@ class TaskEditViewController: UIViewController {
         descriptionTextView.layer.borderColor = UIColor.white.cgColor
         descriptionTextView.layer.borderWidth = 1
         descriptionTextView.layer.masksToBounds = true
-        descriptionTextView.delegate = self
         descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
         descriptionTextView.returnKeyType = .done
         contentView.addSubview(descriptionTextView)
-        
-        // Настройка кнопки сохранения
-        saveButton.setTitle("Сохранить", for: .normal)
-        saveButton.backgroundColor = .black
-        saveButton.layer.borderColor = UIColor.white.cgColor
-        saveButton.layer.borderWidth = 1
-        saveButton.layer.masksToBounds = true
-        saveButton.setTitleColor(.white, for: .normal)
-        saveButton.layer.cornerRadius = 8
-        saveButton.addTarget(self, action: #selector(saveTapped), for: .touchUpInside)
-        saveButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(saveButton)
     }
     
     private func setupScrollView() {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
-        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
@@ -211,14 +201,9 @@ class TaskEditViewController: UIViewController {
             descriptionTextView.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 20),
             descriptionTextView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             descriptionTextView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            descriptionTextView.heightAnchor.constraint(equalToConstant: 250),
-            
-            saveButton.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 32),
-            saveButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            saveButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            saveButton.heightAnchor.constraint(equalToConstant: 50),
-            saveButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
+            descriptionTextView.heightAnchor.constraint(equalToConstant: 250)
         ])
+        contentView.bottomAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 20).isActive = true
     }
     
     private func setupPlaceholder() {
@@ -236,6 +221,7 @@ class TaskEditViewController: UIViewController {
         ])
         updatePlaceholderVisibility()
     }
+    
     // MARK: - Keyboard Handling
     // Метод для обработки появления и скрытия клавиатуры
       private func setupKeyboardObservers() {
@@ -256,6 +242,27 @@ class TaskEditViewController: UIViewController {
       
       @objc private func keyboardWillShow(notification: NSNotification) {
           guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+          
+          //смещение для помещения в центр текстового поля
+          let activeField: UIView? = [titleTextField, descriptionTextView].first { $0.isFirstResponder }
+          guard let field = activeField else { return }
+          
+          let fieldFrame = field.convert(field.bounds, to: scrollView)
+          let visibleHeight = scrollView.frame.height - keyboardFrame.height
+          
+          // если поле скрыто клавиатурой
+          if fieldFrame.maxY >= visibleHeight {
+              let scrollPoint = CGPoint(
+                 x: 0,
+                 y: fieldFrame.origin.y - visibleHeight/2 + fieldFrame.height/2)
+              scrollView.setContentOffset(scrollPoint, animated: true)
+          }
+          
+          // устанавливаем отступы для scrollView
+          let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
+          scrollView.contentInset = contentInset
+          scrollView.scrollIndicatorInsets = contentInset
+          
           let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height, right: 0)
           scrollView.contentInset = contentInsets
           scrollView.scrollIndicatorInsets = contentInsets
@@ -264,6 +271,7 @@ class TaskEditViewController: UIViewController {
       @objc private func keyboardWillHide() {
           scrollView.contentInset = .zero
           scrollView.scrollIndicatorInsets = .zero
+          scrollView.setContentOffset(.zero, animated: false)
       }
     
     // MARK: - Data
@@ -286,8 +294,7 @@ class TaskEditViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func saveTapped() {
-        guard let title = titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
-              !title.isEmpty else {
+        guard let title = titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !title.isEmpty else {
             showAlert(title: "Ошибка", message: "Введите название задачи")
             return
         }
@@ -334,6 +341,7 @@ class TaskEditViewController: UIViewController {
         descriptionTextView.delegate = self
     }
     
+    // метод для форматирования текущей даты в строку для передачи в лейбл
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -399,4 +407,11 @@ extension TaskEditViewController: UITextViewDelegate, UITextFieldDelegate {
         }
         return true
     }
+    
+    // прокрутка к активному полю
+    func textViewDidBeginEditing(_ textView: UITextView) {
+           // Прокручиваем к активному полю
+           let fieldFrame = textView.convert(textView.bounds, to: scrollView)
+           scrollView.scrollRectToVisible(fieldFrame, animated: true)
+       }
 }

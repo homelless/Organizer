@@ -2,7 +2,6 @@ import UIKit
 import Foundation
 
 struct Task: Codable {
-    
     var id: UUID = UUID()
     var title: String
     var isCompleted: Bool = false

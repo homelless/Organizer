@@ -20,7 +20,6 @@ class TaskEditViewController: UIViewController {
     private let switchView = UISwitch()
     private let labelForDate = UILabel()
     private let addButton = UIBarButtonItem(title: "Сохранить", style: .done, target: nil, action: nil)
-    
     private var containerHeightConstraint: NSLayoutConstraint!
     
     // MARK: - Lifecycle
@@ -42,7 +41,9 @@ class TaskEditViewController: UIViewController {
         // Настройка заголовка и фона
         title = task == nil ? "Новая задача" : "Редактировать"
         view.backgroundColor = .black
-        
+        navigationItem.rightBarButtonItem = addButton
+        addButton.target = self
+        addButton.action = #selector(saveTapped)
         
         // Настройка текстового поля
         titleTextField.attributedPlaceholder = NSAttributedString(
@@ -52,10 +53,6 @@ class TaskEditViewController: UIViewController {
                 .font: UIFont.systemFont(ofSize: 16)
             ]
         )
-        
-        navigationItem.rightBarButtonItem = addButton
-        addButton.target = self
-        addButton.action = #selector(saveTapped)
         
         titleTextField.borderStyle = .roundedRect
         titleTextField.layer.cornerRadius = 8
@@ -120,7 +117,6 @@ class TaskEditViewController: UIViewController {
             datePicker.overrideUserInterfaceStyle = .dark
         }
         datePicker.setValue(UIColor.white, forKey: "textColor")
-        datePicker.isHidden = !switchView.isOn
         datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
         containerView.addSubview(datePicker)
         
@@ -160,7 +156,6 @@ class TaskEditViewController: UIViewController {
     }
     
     private func setupConstraints() {
-        
         containerHeightConstraint = containerView.heightAnchor.constraint(equalToConstant: 50)
         
         NSLayoutConstraint.activate([
@@ -373,12 +368,12 @@ class TaskEditViewController: UIViewController {
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
-        labelForDate.text = " - \(formatDate(sender.date))"
+        labelForDate.text = formatDate(sender.date)
     }
     
     @objc private func switchValueChanged(_ sender: UISwitch) {
         datePicker.isHidden = !sender.isOn
-        
+        labelForDate.text = sender.isOn ? formatDate(datePicker.date) : nil
         UIView.animate(withDuration: 0.3) {
             self.containerHeightConstraint.constant = sender.isOn ? 380 : 50
             self.view.layoutIfNeeded()

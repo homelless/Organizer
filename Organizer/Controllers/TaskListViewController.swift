@@ -69,7 +69,6 @@ class TaskListViewController: UIViewController {
             prioritySegmentedControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             prioritySegmentedControl.heightAnchor.constraint(equalToConstant: 32),
             
-            
             tableView.topAnchor.constraint(equalTo: prioritySegmentedControl.bottomAnchor, constant: 8),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -127,7 +126,6 @@ class TaskListViewController: UIViewController {
 
 
     // MARK: - Actions
-    
     private func filterTasks(by priority: Task.Priority? = nil) {
         let allTasks = manager.loadTasks()
         tasks = priority == nil ? allTasks : allTasks.filter { $0.priority == priority!
